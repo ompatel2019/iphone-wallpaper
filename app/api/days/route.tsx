@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
   const totalRows = rows + (extraDots > 0 ? 1 : 0);
 
   // Layout calculations (matching original proportions)
-  const topPadding = height * 0.18; // Reduced top padding to give more space for grid
+  const topPadding = height * 0.20; // Top padding to push content down
   const bottomTextSpace = height * 0.1; // Reduced bottom text area
   const gapBetweenGridAndText = height * 0.04; // Small gap between grid and text
   const sideMargin = width * 0.06;
