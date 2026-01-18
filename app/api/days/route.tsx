@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   const totalRows = rows + (extraDots > 0 ? 1 : 0);
 
   // Layout calculations (matching original proportions)
-  const topPadding = height * 0.18;
+  const topPadding = height * 0.24;
   const bottomTextSpace = height * 0.08;
   const sideMargin = width * 0.06;
 
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
   const spacingY = (availableHeight / (Math.max(totalRows - 1, 1))) * spacingScale;
 
   // Dot size
-  const dotSize = Math.min(spacingX, spacingY) * 0.8;
+  const dotSize = Math.min(spacingX, spacingY) * 0.88;
 
   // Calculate grid dimensions for centering
   const gridWidth = (cols - 1) * spacingX + dotSize;
