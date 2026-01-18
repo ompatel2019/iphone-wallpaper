@@ -93,14 +93,15 @@ export async function GET(request: NextRequest) {
           fontFamily: 'Inter',
         }}
       >
-        {/* Top spacer for time/widgets - this pushes grid down */}
-        <div style={{ flex: 1, minHeight: topPadding, display: 'flex' }} />
+        {/* Top spacer for time/widgets */}
+        <div style={{ height: topPadding, display: 'flex' }} />
 
-        {/* Grid container - aligned to bottom of its space */}
+        {/* Grid container - takes up flexible space, grid aligned to bottom */}
         <div
           style={{
+            flex: 1,
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-end',
             justifyContent: 'center',
           }}
         >
@@ -138,33 +139,14 @@ export async function GET(request: NextRequest) {
           </div>
         </div>
 
-        {/* Italic message between grid and text */}
+        {/* Gap between grid and stats */}
+        <div style={{ height: gapBetweenGridAndText, display: 'flex' }} />
+
+        {/* Stats text - "Xd done · Xd left · X%" */}
         <div
           style={{
-            height: gapBetweenGridAndText,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <span
-            style={{
-              fontFamily: 'Inter',
-              fontStyle: 'italic',
-              fontSize: fontSize * 0.85,
-              color: '#666666',
-            }}
-          >
-            speed matters
-          </span>
-        </div>
-
-        {/* Bottom text - fixed at bottom */}
-        <div
-          style={{
-            height: bottomTextSpace,
-            display: 'flex',
-            alignItems: 'flex-start',
             justifyContent: 'center',
           }}
         >
@@ -209,6 +191,28 @@ export async function GET(request: NextRequest) {
             {/* "X%" - gray */}
             <span style={{ color: '#888888' }}>{percentage}%</span>
           </div>
+        </div>
+
+        {/* Italic message below stats */}
+        <div
+          style={{
+            height: bottomTextSpace,
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            paddingTop: fontSize * 0.4,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'Inter',
+              fontStyle: 'italic',
+              fontSize: fontSize * 0.85,
+              color: '#666666',
+            }}
+          >
+            speed matters
+          </span>
         </div>
       </div>
     ),
