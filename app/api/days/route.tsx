@@ -155,7 +155,7 @@ export async function GET(request: NextRequest) {
               color: '#666666',
             }}
           >
-            intensity and speed
+            speed matters.
           </span>
         </div>
 
