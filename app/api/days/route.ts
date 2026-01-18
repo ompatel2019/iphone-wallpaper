@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
   const percentText = `${percentage}%`;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  const fontSize = Math.floor(width / 30);
+  const fontSize = Math.floor(width / 22);
   ctx.font = `${fontSize}px Arial`;
   
   // Measure text widths
