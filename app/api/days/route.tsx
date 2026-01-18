@@ -1,8 +1,27 @@
 import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 
 // Using Node.js runtime instead of Edge to avoid 1MB size limit
 // (fonts alone are ~800KB)
+
+// Load fonts at module level for caching
+let fontData: ArrayBuffer | null = null;
+let fontDataItalic: ArrayBuffer | null = null;
+
+async function loadFonts() {
+  if (!fontData || !fontDataItalic) {
+    const fontDir = join(process.cwd(), 'app', 'api', 'days');
+    const [regular, italic] = await Promise.all([
+      readFile(join(fontDir, 'Inter-Regular.ttf')),
+      readFile(join(fontDir, 'Inter-Italic.ttf')),
+    ]);
+    fontData = regular.buffer.slice(regular.byteOffset, regular.byteOffset + regular.byteLength);
+    fontDataItalic = italic.buffer.slice(italic.byteOffset, italic.byteOffset + italic.byteLength);
+  }
+  return { fontData, fontDataItalic };
+}
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -10,10 +29,7 @@ export async function GET(request: NextRequest) {
   const width = parseInt(searchParams.get('width') || '1170');
 
   // Load fonts
-  const [fontData, fontDataItalic] = await Promise.all([
-    fetch(new URL('./Inter-Regular.ttf', import.meta.url)).then((res) => res.arrayBuffer()),
-    fetch(new URL('./Inter-Italic.ttf', import.meta.url)).then((res) => res.arrayBuffer()),
-  ]);
+  const fonts = await loadFonts();
 
   // Calculate day of year and progress
   const now = new Date();
@@ -219,12 +235,12 @@ export async function GET(request: NextRequest) {
       fonts: [
         {
           name: 'Inter',
-          data: fontData,
+          data: fonts.fontData!,
           style: 'normal',
         },
         {
           name: 'Inter',
-          data: fontDataItalic,
+          data: fonts.fontDataItalic!,
           style: 'italic',
         },
       ],
