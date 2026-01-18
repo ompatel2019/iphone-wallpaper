@@ -92,7 +92,7 @@ export async function GET(request: NextRequest) {
   const fontSize = Math.floor(width / 30);
   
   // Measure text to position properly
-  ctx.font = `300 ${fontSize}px Arial`;
+  ctx.font = `${fontSize}px Arial`;
   const daysLeftWidth = ctx.measureText(daysLeftText).width;
   const percentWidth = ctx.measureText(percentText).width;
   const totalTextWidth = daysLeftWidth + percentWidth;
