@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   const totalRows = rows + (extraDots > 0 ? 1 : 0);
 
   // Layout calculations (matching original proportions)
-  const topPadding = height * 0.24;
+  const topPadding = height * 0.28;
   const bottomTextSpace = height * 0.08;
   const sideMargin = width * 0.06;
 
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
   const availableHeight = height - topPadding - bottomTextSpace;
 
   // Calculate spacing (matching original scale)
-  const spacingScale = 0.75;
+  const spacingScale = 0.70;
   const spacingX = (availableWidth / (cols - 1)) * spacingScale;
   const spacingY = (availableHeight / (Math.max(totalRows - 1, 1))) * spacingScale;
 
@@ -140,11 +140,11 @@ export async function GET(request: NextRequest) {
         {/* Bottom text */}
         <div
           style={{
-            height: bottomTextSpace * 1.6,
+            height: bottomTextSpace * 1.5,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            paddingBottom: bottomTextSpace * 1.5,
+            paddingBottom: bottomTextSpace * 1.4,
           }}
         >
           <div
