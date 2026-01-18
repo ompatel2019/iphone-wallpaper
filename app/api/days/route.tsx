@@ -8,10 +8,11 @@ export async function GET(request: NextRequest) {
   const height = parseInt(searchParams.get('height') || '2532');
   const width = parseInt(searchParams.get('width') || '1170');
 
-  // Load font
-  const fontData = await fetch(
-    new URL('./Inter-Regular.ttf', import.meta.url)
-  ).then((res) => res.arrayBuffer());
+  // Load fonts
+  const [fontData, fontDataItalic] = await Promise.all([
+    fetch(new URL('./Inter-Regular.ttf', import.meta.url)).then((res) => res.arrayBuffer()),
+    fetch(new URL('./Inter-Italic.ttf', import.meta.url)).then((res) => res.arrayBuffer()),
+  ]);
 
   // Calculate day of year and progress
   const now = new Date();
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
   // Layout calculations (matching original proportions)
   const topPadding = height * 0.18; // Reduced top padding to give more space for grid
   const bottomTextSpace = height * 0.1; // Reduced bottom text area
-  const gapBetweenGridAndText = height * 0.03; // Small gap between grid and text
+  const gapBetweenGridAndText = height * 0.04; // Small gap between grid and text
   const sideMargin = width * 0.06;
 
   const availableWidth = width - (sideMargin * 0.5);
@@ -137,8 +138,26 @@ export async function GET(request: NextRequest) {
           </div>
         </div>
 
-        {/* Gap between grid and text */}
-        <div style={{ height: gapBetweenGridAndText, display: 'flex' }} />
+        {/* Italic message between grid and text */}
+        <div
+          style={{
+            height: gapBetweenGridAndText,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'Inter',
+              fontStyle: 'italic',
+              fontSize: fontSize * 0.85,
+              color: '#666666',
+            }}
+          >
+            intensity and speed
+          </span>
+        </div>
 
         {/* Bottom text - fixed at bottom */}
         <div
@@ -201,6 +220,11 @@ export async function GET(request: NextRequest) {
           name: 'Inter',
           data: fontData,
           style: 'normal',
+        },
+        {
+          name: 'Inter',
+          data: fontDataItalic,
+          style: 'italic',
         },
       ],
     }
