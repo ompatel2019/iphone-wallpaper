@@ -203,8 +203,8 @@ export async function GET(request: NextRequest) {
                 height: dotSeparatorSize,
                 borderRadius: '50%',
                 backgroundColor: '#ffffff',
-                marginLeft: fontSize * 0.6,
-                marginRight: fontSize * 0.6,
+                marginLeft: fontSize * 0.5,
+                marginRight: fontSize * 0.5,
               }}
             />
 
@@ -218,8 +218,8 @@ export async function GET(request: NextRequest) {
                 height: dotSeparatorSize,
                 borderRadius: '50%',
                 backgroundColor: '#888888',
-                marginLeft: fontSize * 0.6,
-                marginRight: fontSize * 0.6,
+                marginLeft: fontSize * 0.5,
+                marginRight: fontSize * 0.5,
               }}
             />
 
