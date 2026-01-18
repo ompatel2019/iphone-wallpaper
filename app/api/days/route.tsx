@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
   const spacingY = (availableHeight / (Math.max(totalRows - 1, 1))) * spacingScale;
 
   // Dot size - slightly larger
-  const dotSize = Math.min(spacingX, spacingY) * 0.88;
+  const dotSize = Math.min(spacingX, spacingY) * 0.8;
 
   // Calculate grid dimensions for centering
   const gridWidth = (cols - 1) * spacingX + dotSize;
@@ -155,7 +155,7 @@ export async function GET(request: NextRequest) {
               color: '#666666',
             }}
           >
-            speed matters.
+            speed matters
           </span>
         </div>
 
