@@ -14,12 +14,26 @@ export async function GET(request: NextRequest) {
     fetch(new URL('./Inter-Italic.ttf', import.meta.url)).then((res) => res.arrayBuffer()),
   ]);
 
-  // Calculate day of year and progress
+  // Calculate day of year and progress using AEST timezone (UTC+10)
   const now = new Date();
-  const startOfYear = new Date(now.getFullYear(), 0, 1);
-  const dayOfYear = Math.floor((now.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+  // Format date in AEST timezone
+  const aestFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Australia/Sydney',
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  });
+  const parts = aestFormatter.formatToParts(now);
+  const year = parseInt(parts.find(p => p.type === 'year')!.value);
+  const month = parseInt(parts.find(p => p.type === 'month')!.value) - 1; // JS months are 0-indexed
+  const date = parseInt(parts.find(p => p.type === 'day')!.value);
+  
+  // Calculate day of year in AEST
+  const startOfYearAEST = Date.UTC(year, 0, 1);
+  const nowAEST = Date.UTC(year, month, date);
+  const dayOfYear = Math.floor((nowAEST - startOfYearAEST) / (1000 * 60 * 60 * 24)) + 1;
   const isLeapYear = (year: number) => (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
-  const totalDays = isLeapYear(now.getFullYear()) ? 366 : 365;
+  const totalDays = isLeapYear(year) ? 366 : 365;
   const daysLeft = totalDays - dayOfYear;
   const percentage = Math.round((dayOfYear / totalDays) * 100);
 
