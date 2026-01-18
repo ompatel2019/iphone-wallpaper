@@ -76,8 +76,8 @@ export async function GET(request: NextRequest) {
     dotRows.push(rowDots);
   }
 
-  const fontSize = Math.floor(width / 30);
-  const dotSeparatorSize = fontSize * 0.24;
+  const fontSize = Math.floor(width / 32);
+  const dotSeparatorSize = fontSize * 0.20;
 
   return new ImageResponse(
     (
@@ -144,7 +144,7 @@ export async function GET(request: NextRequest) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            paddingBottom: bottomTextSpace * 0.4,
+            paddingBottom: bottomTextSpace * 1.5,
           }}
         >
           <div
