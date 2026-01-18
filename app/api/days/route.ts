@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
   
   // Leave room for time/widgets at top and breathing room at bottom
   const topPadding = height * 0.18;
-  const bottomTextSpace = height * 0.1;
+  const bottomTextSpace = height * 0.08;
   const sideMargin = width * 0.06;
   
   const availableWidth = width - (sideMargin * 2);
@@ -49,7 +49,8 @@ export async function GET(request: NextRequest) {
   // Calculate starting position - centered horizontally, starts at top
   const gridWidth = (cols - 1) * spacingX;
   const startX = (width - gridWidth) / 2;
-  const startY = topPadding;
+  const gridHeight = (Math.max(totalRows - 1, 1)) * spacingY;
+  const startY = topPadding + (availableHeight - gridHeight) / 2;
 
   // Draw dots
   for (let i = 0; i < totalDots; i++) {
@@ -62,7 +63,6 @@ export async function GET(request: NextRequest) {
     const rowCols = row < rows ? cols : extraDots;
     if (rowCols === 0) break;
 
-    const rowWidth = (rowCols - 1) * spacingX;
     const rowStartX = row < rows ? startX : startX;
     const x = rowStartX + col * spacingX;
     const y = startY + row * spacingY;
@@ -89,15 +89,15 @@ export async function GET(request: NextRequest) {
   const percentText = ` · ${percentage}%`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  const fontSize = Math.floor(width / 28);
+  const fontSize = Math.floor(width / 30);
   
   // Measure text to position properly
-  ctx.font = `${fontSize}px Arial`;
+  ctx.font = `300 ${fontSize}px Arial`;
   const daysLeftWidth = ctx.measureText(daysLeftText).width;
   const percentWidth = ctx.measureText(percentText).width;
   const totalTextWidth = daysLeftWidth + percentWidth;
   
-  const textY = height - bottomTextSpace * 0.35;
+  const textY = height - bottomTextSpace * 1.4;
   const textStartX = (width - totalTextWidth) / 2;
   
   // Orange for "Xd left"
@@ -110,9 +110,10 @@ export async function GET(request: NextRequest) {
 
   // Convert canvas to PNG buffer
   const buffer = canvas.toBuffer('image/png');
+  const body = new Uint8Array(buffer);
 
   // Return image
-  return new NextResponse(buffer, {
+  return new NextResponse(body, {
     status: 200,
     headers: {
       'Content-Type': 'image/png',
