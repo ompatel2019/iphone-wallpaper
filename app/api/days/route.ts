@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createCanvas } from 'canvas';
+import { createCanvas, registerFont } from 'canvas';
+import path from 'path';
+
+let fontRegistered = false;
+let fontFamily = 'sans-serif';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -14,6 +18,17 @@ export async function GET(request: NextRequest) {
   const totalDays = isLeapYear(now.getFullYear()) ? 366 : 365;
   const daysLeft = totalDays - dayOfYear;
   const percentage = Math.round((dayOfYear / totalDays) * 100);
+
+  if (!fontRegistered) {
+    try {
+      const fontPath = path.join(process.cwd(), 'public', 'fonts', 'NotoSans-Regular.ttf');
+      registerFont(fontPath, { family: 'Noto Sans' });
+      fontFamily = 'Noto Sans';
+    } catch {
+      fontFamily = 'sans-serif';
+    }
+    fontRegistered = true;
+  }
 
   // Create canvas
   const canvas = createCanvas(width, height);
@@ -90,8 +105,8 @@ export async function GET(request: NextRequest) {
   const percentText = `${percentage}%`;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  const fontSize = Math.floor(width / 22);
-  ctx.font = `${fontSize}px Arial`;
+  const fontSize = Math.floor(width / 30);
+  ctx.font = `${fontSize}px ${fontFamily}`;
   
   // Measure text widths
   const daysDoneWidth = ctx.measureText(daysDoneText).width;
