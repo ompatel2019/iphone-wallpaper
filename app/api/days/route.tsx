@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
   const bottomTextSpace = height * 0.08;
   const sideMargin = width * 0.06;
 
-  const availableWidth = width - (sideMargin * 2);
+  const availableWidth = width - (sideMargin * .5);
   const availableHeight = height - topPadding - bottomTextSpace;
 
   // Calculate spacing (matching original scale)
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
   const spacingY = (availableHeight / (Math.max(totalRows - 1, 1))) * spacingScale;
 
   // Dot size
-  const dotSize = Math.min(spacingX, spacingY) * 0.75;
+  const dotSize = Math.min(spacingX, spacingY) * 0.85;
 
   // Calculate grid dimensions for centering
   const gridWidth = (cols - 1) * spacingX + dotSize;
