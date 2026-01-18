@@ -21,9 +21,9 @@ export async function GET(request: NextRequest) {
 
   if (!fontRegistered) {
     try {
-      const fontPath = path.join(process.cwd(), 'public', 'fonts', 'NotoSans-Regular.ttf');
-      registerFont(fontPath, { family: 'Noto Sans' });
-      fontFamily = 'Noto Sans';
+      const fontPath = path.join(process.cwd(), 'public', 'fonts', 'Roboto-Regular.ttf');
+      registerFont(fontPath, { family: 'Roboto' });
+      fontFamily = 'Roboto';
     } catch {
       fontFamily = 'sans-serif';
     }
@@ -106,7 +106,8 @@ export async function GET(request: NextRequest) {
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   const fontSize = Math.floor(width / 30);
-  ctx.font = `${fontSize}px ${fontFamily}`;
+  const fontName = fontFamily.includes(' ') ? `"${fontFamily}"` : fontFamily;
+  ctx.font = `${fontSize}px ${fontName}`;
   
   // Measure text widths
   const daysDoneWidth = ctx.measureText(daysDoneText).width;
