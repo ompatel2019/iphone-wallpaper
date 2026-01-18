@@ -1,7 +1,8 @@
 import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
 
-export const runtime = 'edge';
+// Using Node.js runtime instead of Edge to avoid 1MB size limit
+// (fonts alone are ~800KB)
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
