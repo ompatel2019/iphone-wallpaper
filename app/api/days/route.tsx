@@ -29,20 +29,21 @@ export async function GET(request: NextRequest) {
   const totalRows = rows + (extraDots > 0 ? 1 : 0);
 
   // Layout calculations (matching original proportions)
-  const topPadding = height * 0.28;
-  const bottomTextSpace = height * 0.08;
+  const topPadding = height * 0.18; // Reduced top padding to give more space for grid
+  const bottomTextSpace = height * 0.08; // Reduced bottom text area
+  const gapBetweenGridAndText = height * 0.03; // Small gap between grid and text
   const sideMargin = width * 0.06;
 
-  const availableWidth = width - (sideMargin * .5);
-  const availableHeight = height - topPadding - bottomTextSpace;
+  const availableWidth = width - (sideMargin * 0.5);
+  const availableHeight = height - topPadding - bottomTextSpace - gapBetweenGridAndText;
 
-  // Calculate spacing (matching original scale)
-  const spacingScale = 0.70;
+  // Calculate spacing (matching original scale) - increased for larger grid
+  const spacingScale = 0.72;
   const spacingX = (availableWidth / (cols - 1)) * spacingScale;
   const spacingY = (availableHeight / (Math.max(totalRows - 1, 1))) * spacingScale;
 
-  // Dot size
-  const dotSize = Math.min(spacingX, spacingY) * 0.85;
+  // Dot size - slightly larger
+  const dotSize = Math.min(spacingX, spacingY) * 0.88;
 
   // Calculate grid dimensions for centering
   const gridWidth = (cols - 1) * spacingX + dotSize;
@@ -91,13 +92,12 @@ export async function GET(request: NextRequest) {
           fontFamily: 'Inter',
         }}
       >
-        {/* Top spacer for time/widgets */}
-        <div style={{ height: topPadding, display: 'flex' }} />
+        {/* Top spacer for time/widgets - this pushes grid down */}
+        <div style={{ flex: 1, minHeight: topPadding, display: 'flex' }} />
 
-        {/* Grid container - centered */}
+        {/* Grid container - aligned to bottom of its space */}
         <div
           style={{
-            flex: 1,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -137,14 +137,16 @@ export async function GET(request: NextRequest) {
           </div>
         </div>
 
-        {/* Bottom text */}
+        {/* Gap between grid and text */}
+        <div style={{ height: gapBetweenGridAndText, display: 'flex' }} />
+
+        {/* Bottom text - fixed at bottom */}
         <div
           style={{
-            height: bottomTextSpace * 1.5,
+            height: bottomTextSpace,
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             justifyContent: 'center',
-            paddingBottom: bottomTextSpace * 1.4,
           }}
         >
           <div
