@@ -39,12 +39,12 @@ export async function GET(request: NextRequest) {
   const availableHeight = height - topPadding - bottomTextSpace;
   
   // Calculate spacing between dot centers (slightly tighter)
-  const spacingScale = 0.8;
+  const spacingScale = 0.75;
   const spacingX = (availableWidth / (cols - 1)) * spacingScale;
   const spacingY = (availableHeight / (Math.max(totalRows - 1, 1))) * spacingScale;
   
   // Dot radius - SMALL dots like the original
-  const dotRadius = Math.min(spacingX, spacingY) * 0.35;
+  const dotRadius = Math.min(spacingX, spacingY) * 0.4;
   
   // Calculate starting position - centered horizontally, starts at top
   const gridWidth = (cols - 1) * spacingX;
@@ -85,28 +85,53 @@ export async function GET(request: NextRequest) {
   }
 
   // Draw text at very bottom (matching original style)
+  const daysDoneText = `${dayOfYear}d done`;
   const daysLeftText = `${daysLeft}d left`;
-  const percentText = ` · ${percentage}%`;
-  ctx.textAlign = 'center';
+  const percentText = `${percentage}%`;
+  ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   const fontSize = Math.floor(width / 30);
-  
-  // Measure text to position properly
   ctx.font = `${fontSize}px Arial`;
+  
+  // Measure text widths
+  const daysDoneWidth = ctx.measureText(daysDoneText).width;
   const daysLeftWidth = ctx.measureText(daysLeftText).width;
   const percentWidth = ctx.measureText(percentText).width;
-  const totalTextWidth = daysLeftWidth + percentWidth;
+  const dotRadius2 = fontSize * 0.12;
+  const dotSpacing = fontSize * 0.6;
   
-  const textY = height - bottomTextSpace * 1.4;
-  const textStartX = (width - totalTextWidth) / 2;
+  // Total width: text + dots + spacing
+  const totalTextWidth = daysDoneWidth + dotSpacing + dotRadius2 * 2 + dotSpacing + 
+                         daysLeftWidth + dotSpacing + dotRadius2 * 2 + dotSpacing + percentWidth;
+  
+  const textY = height - bottomTextSpace * 1.6;
+  let currentX = (width - totalTextWidth) / 2;
+  
+  // White for "Xd done"
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(daysDoneText, currentX, textY);
+  currentX += daysDoneWidth + dotSpacing;
+  
+  // Draw dot separator (white)
+  ctx.beginPath();
+  ctx.arc(currentX + dotRadius2, textY, dotRadius2, 0, Math.PI * 2);
+  ctx.fill();
+  currentX += dotRadius2 * 2 + dotSpacing;
   
   // Orange for "Xd left"
   ctx.fillStyle = '#ff6b35';
-  ctx.fillText(daysLeftText, textStartX + daysLeftWidth / 2, textY);
+  ctx.fillText(daysLeftText, currentX, textY);
+  currentX += daysLeftWidth + dotSpacing;
   
-  // Gray for " · X%"
+  // Draw dot separator (gray)
   ctx.fillStyle = '#888888';
-  ctx.fillText(percentText, textStartX + daysLeftWidth + percentWidth / 2, textY);
+  ctx.beginPath();
+  ctx.arc(currentX + dotRadius2, textY, dotRadius2, 0, Math.PI * 2);
+  ctx.fill();
+  currentX += dotRadius2 * 2 + dotSpacing;
+  
+  // Gray for "X%"
+  ctx.fillText(percentText, currentX, textY);
 
   // Convert canvas to PNG buffer
   const buffer = canvas.toBuffer('image/png');
