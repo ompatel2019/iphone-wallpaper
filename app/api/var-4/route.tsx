@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
     if (dayNumber < dayOfYear) {
       color = '#111111'; // Past days - black
     } else if (dayNumber === dayOfYear) {
-      color = '#ff4fa3'; // Current day - pink
+      color = '#1e6bff'; // Current day - blue
     } else {
       color = '#bfbfbf'; // Future days - gray
     }
@@ -92,8 +92,14 @@ export async function GET(request: NextRequest) {
     dotRows.push(rowDots);
   }
 
-  const fontSize = Math.floor(width / 36);
-  const dotSeparatorSize = fontSize * 0.20;
+  const fontSize = Math.floor(width / 32);
+  const progressBarWidth = Math.floor(gridWidth * 0.5);
+  const progressBarHeight = Math.max(8, Math.floor(fontSize * 0.5));
+  const progressFillWidth = Math.round((progressBarWidth * percentage) / 100);
+  const progressLabelOffset = Math.max(
+    0,
+    Math.min(progressBarWidth - fontSize * 1.2, progressFillWidth - fontSize * 0.6)
+  );
 
   return new ImageResponse(
     (
@@ -143,7 +149,7 @@ export async function GET(request: NextRequest) {
                     style={{
                       width: dotSize,
                       height: dotSize,
-                      borderRadius: dotSize * 0.25,
+                      borderRadius: 0,
                       backgroundColor: dot.color,
                     }}
                   />
@@ -156,54 +162,48 @@ export async function GET(request: NextRequest) {
         {/* Gap between grid and stats */}
         <div style={{ height: gapBetweenGridAndText, display: 'flex' }} />
 
-        {/* Stats text - "Xd done · Xd left · X%" */}
+        {/* Progress info + bar */}
         <div
           style={{
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
+            gap: fontSize * 0.35,
+            marginTop: -(fontSize * 0.8),
           }}
         >
+          {/* Done / Total labels */}
           <div
             style={{
               display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              fontSize: fontSize,
+              width: progressBarWidth,
+              justifyContent: 'space-between',
+              fontSize: fontSize * 0.75,
             }}
           >
-            {/* "Xd done" - white */}
             <span style={{ color: '#111111' }}>{dayOfYear}d done</span>
+            <span style={{ color: '#111111' }}>{totalDays}d total</span>
+          </div>
 
-            {/* Dot separator - white */}
+          <div
+            style={{
+              display: 'flex',
+              width: progressBarWidth,
+              height: progressBarHeight,
+              borderRadius: progressBarHeight / 2,
+              backgroundColor: '#333333',
+              overflow: 'hidden',
+            }}
+          >
             <div
               style={{
-                width: dotSeparatorSize,
-                height: dotSeparatorSize,
-                borderRadius: '50%',
-                backgroundColor: '#111111',
-                marginLeft: fontSize * 0.5,
-                marginRight: fontSize * 0.5,
+                width: progressFillWidth,
+                height: '100%',
+                backgroundColor: '#1e6bff',
+                borderRadius: progressBarHeight / 2,
               }}
             />
-
-            {/* "Xd left" - orange */}
-            <span style={{ color: '#ff4fa3' }}>{daysLeft}d left</span>
-
-            {/* Dot separator - gray */}
-            <div
-              style={{
-                width: dotSeparatorSize,
-                height: dotSeparatorSize,
-                borderRadius: '50%',
-                backgroundColor: '#888888',
-                marginLeft: fontSize * 0.5,
-                marginRight: fontSize * 0.5,
-              }}
-            />
-
-            {/* "X%" - gray */}
-            <span style={{ color: '#111111' }}>{percentage}%</span>
           </div>
         </div>
 
@@ -225,7 +225,7 @@ export async function GET(request: NextRequest) {
               color: '#111111',
             }}
           >
-            keep pushing
+            vision is not a group project
           </span>
         </div>
       </div>

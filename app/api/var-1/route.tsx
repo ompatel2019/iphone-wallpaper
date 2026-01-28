@@ -69,11 +69,11 @@ export async function GET(request: NextRequest) {
     const dayNumber = i + 1;
     let color: string;
     if (dayNumber < dayOfYear) {
-      color = '#111111'; // Past days - black
+      color = '#ffffff'; // Past days - white
     } else if (dayNumber === dayOfYear) {
-      color = '#ff4fa3'; // Current day - pink
+      color = '#ff8c00'; // Current day - orange
     } else {
-      color = '#bfbfbf'; // Future days - gray
+      color = '#333333'; // Future days - dark gray
     }
     return { color };
   });
@@ -92,7 +92,7 @@ export async function GET(request: NextRequest) {
     dotRows.push(rowDots);
   }
 
-  const fontSize = Math.floor(width / 36);
+  const fontSize = Math.floor(width / 32);
   const dotSeparatorSize = fontSize * 0.20;
 
   return new ImageResponse(
@@ -103,7 +103,7 @@ export async function GET(request: NextRequest) {
           width: '100%',
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#ffffff',
+          backgroundColor: '#1a1a1a',
           fontFamily: 'Inter',
         }}
       >
@@ -143,7 +143,7 @@ export async function GET(request: NextRequest) {
                     style={{
                       width: dotSize,
                       height: dotSize,
-                      borderRadius: dotSize * 0.25,
+                      borderRadius: '50%',
                       backgroundColor: dot.color,
                     }}
                   />
@@ -173,7 +173,7 @@ export async function GET(request: NextRequest) {
             }}
           >
             {/* "Xd done" - white */}
-            <span style={{ color: '#111111' }}>{dayOfYear}d done</span>
+            <span style={{ color: '#ffffff' }}>{dayOfYear}d done</span>
 
             {/* Dot separator - white */}
             <div
@@ -181,14 +181,14 @@ export async function GET(request: NextRequest) {
                 width: dotSeparatorSize,
                 height: dotSeparatorSize,
                 borderRadius: '50%',
-                backgroundColor: '#111111',
+                backgroundColor: '#ffffff',
                 marginLeft: fontSize * 0.5,
                 marginRight: fontSize * 0.5,
               }}
             />
 
             {/* "Xd left" - orange */}
-            <span style={{ color: '#ff4fa3' }}>{daysLeft}d left</span>
+            <span style={{ color: '#ff6b35' }}>{daysLeft}d left</span>
 
             {/* Dot separator - gray */}
             <div
@@ -203,7 +203,7 @@ export async function GET(request: NextRequest) {
             />
 
             {/* "X%" - gray */}
-            <span style={{ color: '#111111' }}>{percentage}%</span>
+            <span style={{ color: '#888888' }}>{percentage}%</span>
           </div>
         </div>
 
@@ -222,7 +222,7 @@ export async function GET(request: NextRequest) {
               fontFamily: 'Inter',
               fontStyle: 'italic',
               fontSize: fontSize * 0.85,
-              color: '#111111',
+              color: '#666666',
             }}
           >
             keep pushing

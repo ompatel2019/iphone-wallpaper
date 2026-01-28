@@ -92,7 +92,7 @@ export async function GET(request: NextRequest) {
     dotRows.push(rowDots);
   }
 
-  const fontSize = Math.floor(width / 36);
+  const fontSize = Math.floor(width / 32);
   const dotSeparatorSize = fontSize * 0.20;
 
   return new ImageResponse(
@@ -181,7 +181,7 @@ export async function GET(request: NextRequest) {
                 width: dotSeparatorSize,
                 height: dotSeparatorSize,
                 borderRadius: '50%',
-                backgroundColor: '#111111',
+                backgroundColor: '#ff4fa3',
                 marginLeft: fontSize * 0.5,
                 marginRight: fontSize * 0.5,
               }}
@@ -196,14 +196,14 @@ export async function GET(request: NextRequest) {
                 width: dotSeparatorSize,
                 height: dotSeparatorSize,
                 borderRadius: '50%',
-                backgroundColor: '#888888',
+                backgroundColor: '#666666',
                 marginLeft: fontSize * 0.5,
                 marginRight: fontSize * 0.5,
               }}
             />
 
             {/* "X%" - gray */}
-            <span style={{ color: '#111111' }}>{percentage}%</span>
+            <span style={{ color: '#666666' }}>{percentage}%</span>
           </div>
         </div>
 
@@ -222,10 +222,10 @@ export async function GET(request: NextRequest) {
               fontFamily: 'Inter',
               fontStyle: 'italic',
               fontSize: fontSize * 0.85,
-              color: '#111111',
+              color: '#555555',
             }}
           >
-            keep pushing
+            speed matters
           </span>
         </div>
       </div>
