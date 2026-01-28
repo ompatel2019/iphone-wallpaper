@@ -34,7 +34,6 @@ export async function GET(request: NextRequest) {
   const dayOfYear = Math.floor((nowAEST - startOfYearAEST) / (1000 * 60 * 60 * 24)) + 1;
   const isLeapYear = (year: number) => (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
   const totalDays = isLeapYear(year) ? 366 : 365;
-  const daysLeft = totalDays - dayOfYear;
   const percentage = Math.round((dayOfYear / totalDays) * 100);
 
   // Grid configuration - 15 columns x 24 rows + leftover row
@@ -96,10 +95,6 @@ export async function GET(request: NextRequest) {
   const progressBarWidth = Math.floor(gridWidth * 0.5);
   const progressBarHeight = Math.max(8, Math.floor(fontSize * 0.5));
   const progressFillWidth = Math.round((progressBarWidth * percentage) / 100);
-  const progressLabelOffset = Math.max(
-    0,
-    Math.min(progressBarWidth - fontSize * 1.2, progressFillWidth - fontSize * 0.6)
-  );
 
   return new ImageResponse(
     (
