@@ -225,7 +225,7 @@ export async function GET(request: NextRequest) {
               color: '#666666',
             }}
           >
-            speed matters
+            keep pushing
           </span>
         </div>
       </div>
