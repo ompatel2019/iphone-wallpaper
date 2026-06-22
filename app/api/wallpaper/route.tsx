@@ -161,9 +161,10 @@ export async function GET(request: NextRequest) {
   const cfg = variants[varNum] || variants['1'];
   const quote = searchParams.get('quote') || cfg.defaultQuote;
 
-  const [fontRegular, fontItalic] = await Promise.all([
+  const [fontRegular, fontItalic, fontSemiBold] = await Promise.all([
     fetch(new URL('../../fonts/Inter-Regular.ttf', import.meta.url)).then((res) => res.arrayBuffer()),
     fetch(new URL('../../fonts/Inter-Italic.ttf', import.meta.url)).then((res) => res.arrayBuffer()),
+    fetch(new URL('../../fonts/Inter-SemiBold.woff', import.meta.url)).then((res) => res.arrayBuffer()),
   ]);
 
   const now = new Date();
@@ -198,8 +199,9 @@ export async function GET(request: NextRequest) {
   const dotSeparatorSize = fontSize * 0.20;
 
   const fonts = [
-    { name: 'Inter', data: fontRegular, style: 'normal' as const },
-    { name: 'Inter', data: fontItalic, style: 'italic' as const },
+    { name: 'Inter', data: fontRegular, weight: 400 as const, style: 'normal' as const },
+    { name: 'Inter', data: fontSemiBold, weight: 600 as const, style: 'normal' as const },
+    { name: 'Inter', data: fontItalic, weight: 400 as const, style: 'italic' as const },
   ];
 
   // --- YEAR GRID (var 1, 2, 3, 5) ---
@@ -403,20 +405,13 @@ export async function GET(request: NextRequest) {
 
   const cols = 7;
   const rows = 5;
-  const availableWidth = width * cfg.availableWidthRatio;
-  const availableHeight = height - topPadding - bottomTextSpace - gapBetweenGridAndText;
 
-  const monthLabelSize = Math.floor(width / 10);
-  const labelGap = Math.floor(monthLabelSize * 0.5);
-  const monthLabelBlock = monthLabelSize + labelGap;
-  const gridAreaHeight = availableHeight - monthLabelBlock;
+  const monthLabelSize = Math.floor(width / 20);
+  const labelGap = Math.floor(monthLabelSize * 0.4);
 
-  const spacingX = availableWidth / cols;
-  const spacingY = gridAreaHeight / rows;
-  const cellSize = Math.min(spacingX, spacingY);
-  const dotSize = Math.floor(cellSize * 0.55);
-  const gapX = spacingX - dotSize;
-  const gapY = spacingY - dotSize;
+  const dotSize = Math.floor(width / 18);
+  const gapX = Math.floor(dotSize * 0.45);
+  const gapY = Math.floor(dotSize * 0.45);
   const gridWidth = cols * dotSize + (cols - 1) * gapX;
   const gridHeight = rows * dotSize + (rows - 1) * gapY;
 
@@ -441,9 +436,9 @@ export async function GET(request: NextRequest) {
     (
       <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', backgroundColor: cfg.bg, fontFamily: 'Inter' }}>
         <div style={{ height: topPadding, display: 'flex' }} />
-        <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: height * 0.12 }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: gridWidth }}>
-            <div style={{ display: 'flex', alignItems: 'flex-end', fontSize: monthLabelSize, fontWeight: 600, color: cfg.todayColor, marginBottom: labelGap, letterSpacing: '-0.02em' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', fontSize: monthLabelSize, fontWeight: 600, fontFamily: 'Inter', color: cfg.todayColor, marginBottom: labelGap, letterSpacing: '-0.02em' }}>
               {monthName}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: gapY, width: gridWidth, height: gridHeight }}>
