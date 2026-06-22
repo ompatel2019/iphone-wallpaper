@@ -397,13 +397,79 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // --- VAR 6: just text, centered ---
+  // --- SINGLE MONTH (var 6) ---
+  const monthNameFormatter = new Intl.DateTimeFormat('en-US', { timeZone: 'Australia/Sydney', month: 'long' });
+  const monthName = monthNameFormatter.format(now);
+
+  const cols = 7;
+  const rows = 5;
+  const availableWidth = width * cfg.availableWidthRatio;
+  const availableHeight = height - topPadding - bottomTextSpace - gapBetweenGridAndText;
+
+  const monthLabelSize = Math.floor(width / 10);
+  const labelGap = Math.floor(monthLabelSize * 0.5);
+  const monthLabelBlock = monthLabelSize + labelGap;
+  const gridAreaHeight = availableHeight - monthLabelBlock;
+
+  const spacingX = availableWidth / cols;
+  const spacingY = gridAreaHeight / rows;
+  const cellSize = Math.min(spacingX, spacingY);
+  const dotSize = Math.floor(cellSize * 0.55);
+  const gapX = spacingX - dotSize;
+  const gapY = spacingY - dotSize;
+  const gridWidth = cols * dotSize + (cols - 1) * gapX;
+  const gridHeight = rows * dotSize + (rows - 1) * gapY;
+
+  const dots = Array.from({ length: daysInMonth }, (_, i) => {
+    const d = i + 1;
+    if (d < date) return cfg.pastColor;
+    if (d === date) return cfg.todayColor;
+    return cfg.futureColor;
+  });
+
+  const dotRows: (string | null)[][] = [];
+  for (let r = 0; r < rows; r++) {
+    const row: (string | null)[] = [];
+    for (let c = 0; c < cols; c++) {
+      const idx = r * cols + c;
+      row.push(idx < daysInMonth ? dots[idx] : null);
+    }
+    dotRows.push(row);
+  }
+
   return new ImageResponse(
     (
-      <div style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: cfg.bg, fontFamily: 'Inter' }}>
-        <span style={{ fontSize: Math.floor(width / 10), fontWeight: 600, color: '#ffffff', textAlign: 'center' }}>
-          stfu hirang you idiot
-        </span>
+      <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', backgroundColor: cfg.bg, fontFamily: 'Inter' }}>
+        <div style={{ height: topPadding, display: 'flex' }} />
+        <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: gridWidth }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', fontSize: monthLabelSize, fontWeight: 600, color: cfg.todayColor, marginBottom: labelGap, letterSpacing: '-0.02em' }}>
+              {monthName}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: gapY, width: gridWidth, height: gridHeight }}>
+              {dotRows.map((row, ri) => (
+                <div key={ri} style={{ display: 'flex', flexDirection: 'row', gap: gapX }}>
+                  {row.map((color, ci) => (
+                    <div key={ci} style={{ width: dotSize, height: dotSize, borderRadius: color ? dotRadius(cfg.dotShape, dotSize) : 0, backgroundColor: color || 'transparent' }} />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div style={{ height: gapBetweenGridAndText, display: 'flex' }} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', fontSize }}>
+            <span style={{ color: cfg.doneColor }}>{dayOfYear}d done</span>
+            <div style={{ width: dotSeparatorSize, height: dotSeparatorSize, borderRadius: '50%', backgroundColor: cfg.sep1Color, marginLeft: fontSize * 0.5, marginRight: fontSize * 0.5 }} />
+            <span style={{ color: cfg.leftColor }}>{daysLeftYear}d left</span>
+            <div style={{ width: dotSeparatorSize, height: dotSeparatorSize, borderRadius: '50%', backgroundColor: cfg.sep2Color, marginLeft: fontSize * 0.5, marginRight: fontSize * 0.5 }} />
+            <span style={{ color: cfg.pctColor }}>{percentageYear}%</span>
+          </div>
+        </div>
+        <div style={{ height: bottomTextSpace, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: fontSize * 0.4 }}>
+          <span style={{ fontFamily: 'Inter', fontStyle: 'italic', fontSize: fontSize * 0.85, color: cfg.quoteColor }}>{quote}</span>
+        </div>
       </div>
     ),
     { width, height, fonts }
